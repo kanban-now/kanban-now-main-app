@@ -21,9 +21,6 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="box col-md-6 col-md-offset-3">
-                    <div class="stormpath-header">
-                        <img src="https://stormpath.com/images/template/logo-nav.png"/>
-                    </div>
 
                     <div class="alert alert-dismissable alert-success" th:if="${not #strings.isEmpty(status)}">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -33,7 +30,6 @@
                     <!--/* displayed if account IS NOT null, indicating that the user IS logged in */-->
                     <div th:if="${account}">
                         <h1 th:inline="text">Hello, [[${account.givenName}]]!</h1>
-                        <a href="/restricted" class="btn btn-primary">Restricted</a>
                         <a href="/archivedCardsPage" class="btn btn-primary">Archived Cards</a>
                         <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
                     </div>
@@ -41,7 +37,6 @@
                     <!--/* displayed if account IS null, indicating that the user IS NOT logged in */-->
                     <div th:unless="${account}">
                         <h1>Who are you?</h1>
-                        <a href="/restricted" class="btn btn-primary">Restricted</a>
                         <a href="/archivedCardsPage" class="btn btn-primary">Archived Cards</a>
                     </div>
                 </div>

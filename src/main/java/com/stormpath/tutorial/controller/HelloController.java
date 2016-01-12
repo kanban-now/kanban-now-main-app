@@ -34,15 +34,6 @@ public class HelloController {
         return "home";
     }
 
-    @RequestMapping("/restricted")
-    String restricted(HttpServletRequest req) {
-        if (AccountResolver.INSTANCE.getAccount(req) != null) {
-            return "restricted";
-        }
-
-        return "redirect:/login";
-    }
-
 
     @RequestMapping("/archivedCardsPage")
     String archivedCardsPage(HttpServletRequest req) {
