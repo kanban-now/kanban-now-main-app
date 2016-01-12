@@ -30,9 +30,9 @@
 
 <body ng-controller="ArchivedCardListController">
 
-<!--<div ng-show="errorGettingArchivedCardList" >-->
-    <!--Error attempting to retrieve archived card list:  {{errorGettingArchivedCardListErrorMessage}}-->
-<!--</div>-->
+<div ng-show="errorGettingArchivedCardList" >
+    Error attempting to retrieve archived card list:  {{errorGettingArchivedCardListErrorMessage}}
+</div>
 <table id="archivedCards" class="tftable" >
     <tr><th>Card text</th><th>Archived Date</th></tr>
     <tr ng-repeat="card in cardList" id="archivedCard-{{card.id}}">
