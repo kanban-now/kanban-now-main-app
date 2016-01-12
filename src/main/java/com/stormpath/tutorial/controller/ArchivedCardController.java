@@ -21,31 +21,40 @@ package com.stormpath.tutorial.controller;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.servlet.account.AccountResolver;
 import com.stormpath.tutorial.exception.ForbiddenException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import javax.xml.bind.DatatypeConverter;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+
 
 @RestController
 public class ArchivedCardController {
 
-    private static final String template = "Hello, %s!";
-    private final AtomicLong counter = new AtomicLong();
+    private static String accessKeyId  = System.getenv("stormpath_apiKey_id");
+    private static String secretKey = System.getenv("stormpath_apiKey_secret");
+    private static String userAndPassword = accessKeyId + ":" + secretKey;
+    private static String userCredentials = userAndPassword;
+    private static String basicAuth = "Basic " + DatatypeConverter.printBase64Binary(userCredentials.getBytes());
 
     @RequestMapping("/api/archived-cards")
     public List<ArchivedCard> greeting(HttpServletRequest req) {
         Account account = AccountResolver.INSTANCE.getAccount(req);
-
         if (account == null) { throw new ForbiddenException(); }
 
-        List<ArchivedCard> archivedCardList = new ArrayList<ArchivedCard>();
-        archivedCardList.add( new ArchivedCard("Mike is cool", "Date1"));
-        archivedCardList.add( new ArchivedCard("Ted is dum", "Date1"));
-        archivedCardList.add( new ArchivedCard("Fred is not Ted", "Date3"));
-
+        String url = "https://archive-card-service-2-development.cfapps.io:443/archivedCards";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", basicAuth);
+        HttpEntity entity = new HttpEntity(headers);
+        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
+        ArchivedCard[] archivedCardArray = response.getBody();
+        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
         return archivedCardList;
     }
 }

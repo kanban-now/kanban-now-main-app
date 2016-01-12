@@ -25,6 +25,11 @@ public class ArchivedCard {
     private String text;
     private String date;
 
+
+    public ArchivedCard() {
+    }
+
+
     public ArchivedCard(String text, String date) {
         this.text = text;
         this.date = date;
