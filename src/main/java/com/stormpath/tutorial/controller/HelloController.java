@@ -42,4 +42,15 @@ public class HelloController {
 
         return "redirect:/login";
     }
+
+
+    @RequestMapping("/archivedCardsPage")
+    String archivedCardsPage(HttpServletRequest req) {
+        if (AccountResolver.INSTANCE.getAccount(req) != null) {
+            return "archivedCardsPage";
+        }
+
+        return "redirect:/login";
+    }
+
 }

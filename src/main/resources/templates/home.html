@@ -34,6 +34,7 @@
                     <div th:if="${account}">
                         <h1 th:inline="text">Hello, [[${account.givenName}]]!</h1>
                         <a href="/restricted" class="btn btn-primary">Restricted</a>
+                        <a href="/archivedCardsPage" class="btn btn-primary">Archived Cards</a>
                         <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
                     </div>
 
@@ -41,6 +42,7 @@
                     <div th:unless="${account}">
                         <h1>Who are you?</h1>
                         <a href="/restricted" class="btn btn-primary">Restricted</a>
+                        <a href="/archivedCardsPage" class="btn btn-primary">Archived Cards</a>
                     </div>
                 </div>
             </div>
