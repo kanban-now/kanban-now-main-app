@@ -16,12 +16,12 @@
  *
  */
 
-package com.stormpath.tutorial.controller;
+package main.controller;
 
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.impl.account.DefaultAccount;
 import com.stormpath.sdk.servlet.account.AccountResolver;
-import com.stormpath.tutorial.exception.ForbiddenException;
+import main.exception.ForbiddenException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -52,7 +52,7 @@ public class ArchivedCardController {
         if (account == null) { throw new ForbiddenException(); }
 
         String userStormpathId = getStormpathIdForAccount(account);
-        String url =archiveCardServiceBaseUrl + "/" + userStormpathId;
+        String url = archiveCardServiceBaseUrl + "/" + userStormpathId;
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();

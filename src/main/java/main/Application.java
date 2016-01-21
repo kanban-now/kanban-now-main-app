@@ -1,8 +1,5 @@
-package com.stormpath.tutorial.controller;
-
 /*
- * Copyright 2015, Michael A. DuVall
- *
+ * Copyright 2015 Stormpath, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,39 +12,18 @@ package com.stormpath.tutorial.controller;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
+package main;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-public class ArchivedCard {
-
-    private String text;
-    private String date;
-
-
-    public ArchivedCard() {
-    }
-
-
-    public ArchivedCard(String text, String date) {
-        this.text = text;
-        this.date = date;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
+/**
+ * @since 1.0.RC5
+ */
+@SpringBootApplication
+public class Application  {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
 }
