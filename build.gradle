@@ -9,6 +9,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'spring-boot'
 
@@ -26,4 +27,33 @@ repositories {
 dependencies {
     compile group: 'com.stormpath.spring', name: 'stormpath-webmvc-spring-boot-starter', version:'1.0.RC8'
     runtime group: 'com.stormpath.spring', name: 'stormpath-thymeleaf-spring-boot-starter', version:'1.0.RC8'
+
+    testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.1.5'
+    testCompile group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.7.1'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+
+}
+
+
+sourceSets {
+    integrationTest {
+        java {
+            srcDirs = ['src/main/java']
+        }
+
+        groovy {
+            srcDirs = ['src/integrationTest/groovy']
+        }
+
+        resources.srcDir file('src/integrationTest/resources')
+        compileClasspath = sourceSets.main.output + configurations.testRuntime
+        runtimeClasspath = output + compileClasspath
+    }
+}
+
+
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    systemProperties = System.properties
 }
