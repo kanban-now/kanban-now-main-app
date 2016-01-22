@@ -13,7 +13,7 @@ apply plugin: 'groovy'
 //apply plugin: 'maven'
 apply plugin: 'spring-boot'
 
-archivesBaseName = 'kanban-now-app'
+archivesBaseName = 'kanban-now-main-app'
 
 group = 'main'
 version = '0.1.0'
