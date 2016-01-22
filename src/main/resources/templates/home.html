@@ -16,6 +16,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <!--/*/ <th:block th:include="fragments/head :: head"/> /*/-->
+        <title>Kanban Now</title>
     </head>
     <body>
         <div class="container-fluid">
@@ -36,7 +37,7 @@
 
                     <!--/* displayed if account IS null, indicating that the user IS NOT logged in */-->
                     <div th:unless="${account}">
-                        <h1>Who are you?</h1>
+                        <h1 id="who-are-you-header">Who are you?</h1>
                         <a href="/archivedCardsPage" class="btn btn-primary">Archived Cards</a>
                     </div>
                 </div>

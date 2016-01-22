@@ -57,3 +57,27 @@ task integrationTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
     systemProperties = System.properties
 }
+
+
+task writeCloudFoundryManifest(type: Copy) {
+    from 'cloud-foundry'
+    into "${buildDir}"
+    include 'manifest.yml.template'
+    rename { file -> 'manifest.yml' }
+    expand([
+            stormpath_apiKey_id: "$System.env.stormpath_apiKey_id",
+            stormpath_apiKey_secret: "$System.env.stormpath_apiKey_secret",
+            stormpath_application_href: "$System.env.stormpath_application_href",
+            deployment_environment: "$System.env.deployment_environment",
+            kanban_now_services_apiKey_id: "$System.env.kanban_now_services_apiKey_id",
+            kanban_now_services_apiKey_secret: "$System.env.kanban_now_services_apiKey_secret",
+            archive_card_service_base_url: "$System.env.archive_card_service_base_url",
+
+    ])
+}
+
+
+//task cfPush(dependsOn:[writeCloudFoundryManifest,cfLogin], type:Exec){
+task cfPush(dependsOn:[], type:Exec){
+    commandLine "cf","push","-f","${buildDir}/manifest.yml"
+}

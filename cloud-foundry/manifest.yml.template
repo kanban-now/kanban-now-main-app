@@ -1,0 +1,12 @@
+---
+applications:
+- name: kanban-now-main-app-${deployment_environment}
+  buildpack: https://github.com/cloudfoundry/java-buildpack
+  path: ../build/libs/kanban-now-main-app-0.1.0.jar
+  env:
+    stormpath_apiKey_id: ${stormpath_apiKey_id}
+    stormpath_apiKey_secret: ${stormpath_apiKey_secret}
+    stormpath_application_href: ${stormpath_application_href}
+    kanban_now_services_apiKey_id: ${kanban_now_services_apiKey_id}
+    kanban_now_services_apiKey_secret: ${kanban_now_services_apiKey_secret}
+    archive_card_service_base_url: ${archive_card_service_base_url}
