@@ -10,10 +10,12 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'groovy'
-apply plugin: 'maven'
+//apply plugin: 'maven'
 apply plugin: 'spring-boot'
 
-group = 'com.stormpath'
+archivesBaseName = 'kanban-now-app'
+
+group = 'main'
 version = '0.1.0'
 
 sourceCompatibility = 1.8
