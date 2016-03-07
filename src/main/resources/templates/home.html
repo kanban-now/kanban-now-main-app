@@ -31,7 +31,7 @@
                     <!--/* displayed if account IS NOT null, indicating that the user IS logged in */-->
                     <div th:if="${account}">
                         <h1 th:inline="text">Hello, [[${account.givenName}]]!</h1>
-                        <a href="/archivedCardsPage" class="btn btn-primary">Archived Cards</a>
+                        <a id="archivedCardsButton" href="/archivedCardsPage" class="btn btn-primary">Archived Cards</a>
                         <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
                     </div>
 
