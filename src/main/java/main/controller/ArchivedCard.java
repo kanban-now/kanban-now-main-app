@@ -20,19 +20,22 @@ package main.controller;
 
 
 
+
 public class ArchivedCard {
 
     private String text;
     private String date;
+    private Long boardId;
 
 
     public ArchivedCard() {
     }
 
 
-    public ArchivedCard(String text, String date) {
+    public ArchivedCard(String text, String date, Long boardId) {
         this.text = text;
         this.date = date;
+        this.boardId = boardId;
     }
 
     public String getText() {
@@ -49,5 +52,13 @@ public class ArchivedCard {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Long getBoardId() {
+        return boardId;
+    }
+
+    public void setBoardId(Long boardId) {
+        this.boardId = boardId;
     }
 }
