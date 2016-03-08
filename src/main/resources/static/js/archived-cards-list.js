@@ -9,6 +9,12 @@ function sleep(delay) {
 }
 
 
+function addDivToBody(divId) {
+    var myEl = angular.element( document.querySelector( 'body' ) );
+    var divContents = '<div id="' + divId + '"></div>';
+    myEl.append(divContents);
+
+}
 
 angular.module('kanbannow-archive-cards', []).controller('ArchivedCardListController', function($scope, $http) {
 
@@ -26,14 +32,11 @@ angular.module('kanbannow-archive-cards', []).controller('ArchivedCardListContro
     }).then(function successCallback(response) {
         $scope.cardList = response.data;
         sleep(5000)
-        var myEl = angular.element( document.querySelector( '#archivedCards' ) );
-        myEl.append('<div id="ajaxCompleted"></div>');
+        addDivToBody('ajaxCompleted');
     }, function errorCallback(response) {
         $scope.errorGettingArchivedCardList = true;
         $scope.errorGettingArchivedCardListErrorMessage = response.data;
-        var myEl = angular.element( document.querySelector( '#archivedCards' ) );
-        myEl.append('<div id="ajaxCompleted"></div>');
-
+        addDivToBody('ajaxCompleted');
     });
 
 });
