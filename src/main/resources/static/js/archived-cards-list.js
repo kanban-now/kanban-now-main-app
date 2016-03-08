@@ -1,4 +1,15 @@
 
+
+
+
+
+function sleep(delay) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
+}
+
+
+
 angular.module('kanbannow-archive-cards', []).controller('ArchivedCardListController', function($scope, $http) {
 
     //$scope.cardList = [{text: "Card1", date: "Date1"},  {text: "Card2", date: "Date2"} /*,*/];
@@ -6,18 +17,23 @@ angular.module('kanbannow-archive-cards', []).controller('ArchivedCardListContro
 
     $scope.errorGettingArchivedCardList = false;
     $scope.errorGettingArchivedCardListErrorMessage = "";
-    window.getArchivedCardsLatch = 'started';
+
+
 
     $http({
         method: 'GET',
         url: getArchivedCardsUri
     }).then(function successCallback(response) {
         $scope.cardList = response.data;
-        window.getArchivedCardsLatch = 'done';
+        sleep(5000)
+        var myEl = angular.element( document.querySelector( '#archivedCards' ) );
+        myEl.append('<div id="ajaxCompleted"></div>');
     }, function errorCallback(response) {
         $scope.errorGettingArchivedCardList = true;
         $scope.errorGettingArchivedCardListErrorMessage = response.data;
-        window.getArchivedCardsLatch = 'done';
+        var myEl = angular.element( document.querySelector( '#archivedCards' ) );
+        myEl.append('<div id="ajaxCompleted"></div>');
+
     });
 
 });
