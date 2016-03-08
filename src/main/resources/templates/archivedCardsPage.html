@@ -22,6 +22,9 @@
     <title>View Archived Cards List</title>
     <script type="text/javascript"
             src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
     <script type="text/javascript" src="js/archived-cards-list.js"></script>
 
 
@@ -33,7 +36,7 @@
 <div ng-show="errorGettingArchivedCardList" >
     Error attempting to retrieve archived card list:  {{errorGettingArchivedCardListErrorMessage}}
 </div>
-<table id="archivedCards" class="tftable" >
+<table id="archivedCards" class="table table-striped"  >
     <tr><th>Card text</th><th>Archived Date</th></tr>
     <tr ng-repeat="card in cardList" id="archivedCard-{{card.id}}">
         <td>{{card.text}}</td>
