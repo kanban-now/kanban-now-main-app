@@ -1,12 +1,8 @@
 
-
 function sleep(delay) {
     var start = new Date().getTime();
     while (new Date().getTime() < start + delay);
 }
-
-
-
 
 
 angular.module('kanbannow-archive-cards', []).controller('ArchivedCardListController', function($scope, $http) {
@@ -16,8 +12,6 @@ angular.module('kanbannow-archive-cards', []).controller('ArchivedCardListContro
 
     $scope.errorGettingArchivedCardList = false;
     $scope.errorGettingArchivedCardListErrorMessage = "";
-
-
 
     $http({
         method: 'GET',
@@ -31,3 +25,40 @@ angular.module('kanbannow-archive-cards', []).controller('ArchivedCardListContro
     });
 
 });
+
+
+angular.module('ngTableTutorial', ['ngTable']).controller('tableController', function($scope, $filter, $http, ngTableParams) {
+
+    var getArchivedCardsUri = 'api/archived-cards';
+
+    $scope.errorGettingArchivedCardList = false;
+    $scope.errorGettingArchivedCardListErrorMessage = "";
+
+    $scope.usersTable = new ngTableParams({
+        page: 1,
+        count: 10
+    }, {
+        total: 0,
+        getData: function ($defer, params) {
+
+            $http({
+                method: 'GET',
+                url: getArchivedCardsUri
+            }).then(function successCallback(response) {
+                $scope.users = response.data;
+                $scope.data = $scope.users.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                params.total(response.data.length)
+                //sleep(1000)
+                $defer.resolve($scope.data);
+                //sleep(1000)
+            }, function errorCallback(response) {
+                $scope.errorGettingArchivedCardList = true;
+                $scope.errorGettingArchivedCardListErrorMessage = response.data;
+            });
+
+        }
+    });
+
+});
+
+
