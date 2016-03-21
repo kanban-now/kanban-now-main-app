@@ -41,13 +41,21 @@ angular.module('ngTableTutorial', ['ngTable']).controller('tableController', fun
         total: 0,
         getData: function ($defer, params) {
 
+
             $http({
                 method: 'GET',
-                url: getArchivedCardsUri
+                url: getArchivedCardsUri,
+                params: {pageNumber: params.page(), pageSize: params.count()}
             }).then(function successCallback(response) {
                 $scope.users = response.data;
                 $scope.data = $scope.users.slice((params.page() - 1) * params.count(), params.page() * params.count());
                 params.total(response.data.length)
+
+                Make rest call return total number of records too in addition
+                to the paged records
+                Then update params.total( response.data.totalNumRecords)
+                or whatever structure I come up with for the return value of the rest call
+
                 //sleep(1000)
                 $defer.resolve($scope.data);
                 //sleep(1000)

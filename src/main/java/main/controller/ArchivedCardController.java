@@ -26,6 +26,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
@@ -47,12 +48,18 @@ public class ArchivedCardController {
     private static String archiveCardServiceBaseUrl = System.getenv("archive_card_service_base_url");
 
     @RequestMapping("/api/archived-cards")
-    public List<ArchivedCard> greeting(HttpServletRequest req) {
+    public List<ArchivedCard> greeting(
+            HttpServletRequest req,
+            @RequestParam(value="pageNumber") Integer pageNumber,
+            @RequestParam(value="pageSize") Integer pageSize) {
         Account account = AccountResolver.INSTANCE.getAccount(req);
         if (account == null) { throw new ForbiddenException(); }
 
+        pageNumber = pageNumber - 1;
         String userStormpathId = getStormpathIdForAccount(account);
         String url = archiveCardServiceBaseUrl + "/" + userStormpathId;
+        url += "?pageNumber=" + pageNumber + "&pageSize=" + pageSize;
+
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
