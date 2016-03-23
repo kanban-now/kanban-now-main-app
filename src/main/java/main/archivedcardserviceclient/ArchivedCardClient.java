@@ -1,10 +1,13 @@
-package main.archivedcardserviceclient
+package main.archivedcardserviceclient;
 
-import feign.Headers
-import feign.Param
-import feign.RequestLine
+import feign.Headers;
+import feign.Param;
+import feign.RequestLine;
 
-interface ArchivedCardClient {
+import java.util.List;
+
+public interface ArchivedCardClient {
+
     @RequestLine("GET /archivedCards/{userId}/")
     List<Card> cards(@Param("userId") String userId);
 
@@ -16,4 +19,3 @@ interface ArchivedCardClient {
     void deleteCard(@Param("userId") String userId, @Param("cardId") Long cardId);
 
 }
-

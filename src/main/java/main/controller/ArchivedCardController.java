@@ -26,6 +26,7 @@ import feign.auth.BasicAuthRequestInterceptor;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import main.archivedcardserviceclient.ArchivedCardClient;
+import main.archivedcardserviceclient.Card;
 import main.exception.ForbiddenException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -53,22 +54,32 @@ public class ArchivedCardController {
     private static String archiveCardServiceBaseUrl = System.getenv("archive_card_service_base_url");
 
     @RequestMapping("/api/archived-cards")
-    public List<ArchivedCard> greeting(
+    public List<Card> greeting(
             HttpServletRequest req) {
         Account account = AccountResolver.INSTANCE.getAccount(req);
         if (account == null) { throw new ForbiddenException(); }
 
         String userStormpathId = getStormpathIdForAccount(account);
-        String url = archiveCardServiceBaseUrl + "/" + userStormpathId;
+//        String url = archiveCardServiceBaseUrl + "/" + userStormpathId;
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", basicAuth);
-        HttpEntity entity = new HttpEntity(headers);
-        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
-        ArchivedCard[] archivedCardArray = response.getBody();
-        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
-        return archivedCardList;
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", basicAuth);
+//        HttpEntity entity = new HttpEntity(headers);
+//        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
+//        ArchivedCard[] archivedCardArray = response.getBody();
+//        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
+//        return archivedCardList;
+
+        ArchivedCardClient archivedCardClient = Feign.builder()
+                .decoder(new GsonDecoder())
+                .encoder(new GsonEncoder())
+                .requestInterceptor(new BasicAuthRequestInterceptor(kanbanNowServicesAccessKeyId, kanbanNowServicesSecretKey))
+                .target(ArchivedCardClient.class, archiveCardServiceBaseUrl);
+
+
+        return archivedCardClient.cards(userStormpathId);
+
     }
 
     @RequestMapping("/api/new-archived-cards")
@@ -88,25 +99,26 @@ public class ArchivedCardController {
         }
 
 
-        Update here to use FeignClient
-                Update FeignClient to call new paged endpoint that returns paging data
-                Fixup javascript controller to call this new endpoint and to use the return pagingData
-
-        ArchivedCardClient archivedCardClient = Feign.builder()
-                .decoder(new GsonDecoder())
-                .encoder(new GsonEncoder())
-                .requestInterceptor(new BasicAuthRequestInterceptor(archiveCardServiceUserName, archiveCardServicePassword))
-                .target(ArchivedCardClient.class, archiveCardServiceUrl);
+//        Update here to use FeignClient
+//                Update FeignClient to call new paged endpoint that returns paging data
+//                Fixup javascript controller to call this new endpoint and to use the return pagingData
 
 
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", basicAuth);
-//        HttpEntity entity = new HttpEntity(headers);
-//        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
-//        ArchivedCard[] archivedCardArray = response.getBody();
-//        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
-//        return archivedCardList;
+//        String newUrl = archiveCardServiceBaseUrl + "/paged";
+//        ArchivedCardClient archivedCardClient = Feign.builder()
+//                .decoder(new GsonDecoder())
+//                .encoder(new GsonEncoder())
+//                .requestInterceptor(new BasicAuthRequestInterceptor(kanbanNowServicesAccessKeyId, kanbanNowServicesSecretKey))
+//                .target(ArchivedCardClient.class, newUrl);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", basicAuth);
+        HttpEntity entity = new HttpEntity(headers);
+        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
+        ArchivedCard[] archivedCardArray = response.getBody();
+        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
+        return archivedCardList;
     }
 
 
