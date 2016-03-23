@@ -47,9 +47,8 @@ angular.module('ngTableTutorial', ['ngTable']).controller('tableController', fun
                 url: getArchivedCardsUri,
                 params: {pageNumber: params.page(), pageSize: params.count()}
             }).then(function successCallback(response) {
-                $scope.users = response.data;
-                $scope.data = $scope.users.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                params.total(response.data.length)
+                $scope.data = response.data.data;
+                params.total(response.data.pagingData.totalCount)
 
                 //sleep(1000)
                 $defer.resolve($scope.data);

@@ -18,4 +18,6 @@ public interface ArchivedCardClient {
     @RequestLine("DELETE /archivedCards/{userId}/{cardId}")
     void deleteCard(@Param("userId") String userId, @Param("cardId") Long cardId);
 
+    @RequestLine("GET /archivedCards/paged/{userId}/?pageNumber={pageNumber}&pageSize={pageSize}")
+    PagedArchivedCardList getCardsForUserPaged(@Param("userId") String userId, @Param("pageNumber")Integer pageNumber, @Param("pageSize")Integer pageSize);
 }

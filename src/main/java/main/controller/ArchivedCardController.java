@@ -27,17 +27,13 @@ import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import main.archivedcardserviceclient.ArchivedCardClient;
 import main.archivedcardserviceclient.Card;
+import main.archivedcardserviceclient.PagedArchivedCardList;
 import main.exception.ForbiddenException;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -60,16 +56,6 @@ public class ArchivedCardController {
         if (account == null) { throw new ForbiddenException(); }
 
         String userStormpathId = getStormpathIdForAccount(account);
-//        String url = archiveCardServiceBaseUrl + "/" + userStormpathId;
-
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", basicAuth);
-//        HttpEntity entity = new HttpEntity(headers);
-//        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
-//        ArchivedCard[] archivedCardArray = response.getBody();
-//        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
-//        return archivedCardList;
 
         ArchivedCardClient archivedCardClient = Feign.builder()
                 .decoder(new GsonDecoder())
@@ -84,42 +70,25 @@ public class ArchivedCardController {
     }
 
     @RequestMapping("/api/new-archived-cards")
-    public List<ArchivedCard> newArchivedCards(
+    public PagedArchivedCardList newArchivedCards(
             HttpServletRequest req,
-            @RequestParam(value="pageNumber", required= false) Integer pageNumber,
-            @RequestParam(value="pageSize", required = false) Integer pageSize) {
+            @RequestParam(value="pageNumber", required = true) Integer pageNumber,
+            @RequestParam(value="pageSize", required = true) Integer pageSize) {
         Account account = AccountResolver.INSTANCE.getAccount(req);
         if (account == null) { throw new ForbiddenException(); }
 
-
         String userStormpathId = getStormpathIdForAccount(account);
-        String url = archiveCardServiceBaseUrl + "/" + userStormpathId;
-        if(pageNumber != null && pageSize != null) {
-            pageNumber = pageNumber - 1;
-            url += "?pageNumber=" + pageNumber + "&pageSize=" + pageSize;
-        }
+
+        ArchivedCardClient archivedCardClient = Feign.builder()
+                .decoder(new GsonDecoder())
+                .encoder(new GsonEncoder())
+                .requestInterceptor(new BasicAuthRequestInterceptor(kanbanNowServicesAccessKeyId, kanbanNowServicesSecretKey))
+                .target(ArchivedCardClient.class, archiveCardServiceBaseUrl);
 
 
-//        Update here to use FeignClient
-//                Update FeignClient to call new paged endpoint that returns paging data
-//                Fixup javascript controller to call this new endpoint and to use the return pagingData
-
-
-//        String newUrl = archiveCardServiceBaseUrl + "/paged";
-//        ArchivedCardClient archivedCardClient = Feign.builder()
-//                .decoder(new GsonDecoder())
-//                .encoder(new GsonEncoder())
-//                .requestInterceptor(new BasicAuthRequestInterceptor(kanbanNowServicesAccessKeyId, kanbanNowServicesSecretKey))
-//                .target(ArchivedCardClient.class, newUrl);
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", basicAuth);
-        HttpEntity entity = new HttpEntity(headers);
-        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
-        ArchivedCard[] archivedCardArray = response.getBody();
-        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
-        return archivedCardList;
+        pageNumber = pageNumber - 1;
+        PagedArchivedCardList pagedArchivedCardList = archivedCardClient.getCardsForUserPaged(userStormpathId, pageNumber, pageSize);
+        return pagedArchivedCardList;
     }
 
 
