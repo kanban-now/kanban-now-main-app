@@ -50,15 +50,18 @@ public class ArchivedCardController {
     @RequestMapping("/api/archived-cards")
     public List<ArchivedCard> greeting(
             HttpServletRequest req,
-            @RequestParam(value="pageNumber") Integer pageNumber,
-            @RequestParam(value="pageSize") Integer pageSize) {
+            @RequestParam(value="pageNumber", required= false) Integer pageNumber,
+            @RequestParam(value="pageSize", required = false) Integer pageSize) {
         Account account = AccountResolver.INSTANCE.getAccount(req);
         if (account == null) { throw new ForbiddenException(); }
 
-        pageNumber = pageNumber - 1;
+
         String userStormpathId = getStormpathIdForAccount(account);
         String url = archiveCardServiceBaseUrl + "/" + userStormpathId;
-        url += "?pageNumber=" + pageNumber + "&pageSize=" + pageSize;
+        if(pageNumber != null && pageSize != null) {
+            pageNumber = pageNumber - 1;
+            url += "?pageNumber=" + pageNumber + "&pageSize=" + pageSize;
+        }
 
 
         RestTemplate restTemplate = new RestTemplate();
