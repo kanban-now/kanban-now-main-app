@@ -30,6 +30,12 @@ dependencies {
     compile group: 'com.stormpath.spring', name: 'stormpath-webmvc-spring-boot-starter', version:'1.0.RC8'
     runtime group: 'com.stormpath.spring', name: 'stormpath-thymeleaf-spring-boot-starter', version:'1.0.RC8'
 
+    compile 'com.netflix.feign:feign-core:8.15.0'
+    compile 'com.netflix.feign:feign-gson:8.15.0'
+
+    compile 'org.projectlombok:lombok:1.16.6'
+
+
     testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.1.5'
     testCompile group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.7.1'
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'

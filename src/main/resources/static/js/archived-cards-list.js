@@ -29,7 +29,7 @@ angular.module('kanbannow-archive-cards', []).controller('ArchivedCardListContro
 
 angular.module('ngTableTutorial', ['ngTable']).controller('tableController', function($scope, $filter, $http, ngTableParams) {
 
-    var getArchivedCardsUri = 'api/archived-cards';
+    var getArchivedCardsUri = 'api/new-archived-cards';
 
     $scope.errorGettingArchivedCardList = false;
     $scope.errorGettingArchivedCardListErrorMessage = "";
