@@ -21,6 +21,11 @@ package main.controller;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.impl.account.DefaultAccount;
 import com.stormpath.sdk.servlet.account.AccountResolver;
+import feign.Feign;
+import feign.auth.BasicAuthRequestInterceptor;
+import feign.gson.GsonDecoder;
+import feign.gson.GsonEncoder;
+import main.archivedcardserviceclient.ArchivedCardClient;
 import main.exception.ForbiddenException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -49,6 +54,25 @@ public class ArchivedCardController {
 
     @RequestMapping("/api/archived-cards")
     public List<ArchivedCard> greeting(
+            HttpServletRequest req) {
+        Account account = AccountResolver.INSTANCE.getAccount(req);
+        if (account == null) { throw new ForbiddenException(); }
+
+        String userStormpathId = getStormpathIdForAccount(account);
+        String url = archiveCardServiceBaseUrl + "/" + userStormpathId;
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", basicAuth);
+        HttpEntity entity = new HttpEntity(headers);
+        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
+        ArchivedCard[] archivedCardArray = response.getBody();
+        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
+        return archivedCardList;
+    }
+
+    @RequestMapping("/api/new-archived-cards")
+    public List<ArchivedCard> newArchivedCards(
             HttpServletRequest req,
             @RequestParam(value="pageNumber", required= false) Integer pageNumber,
             @RequestParam(value="pageSize", required = false) Integer pageSize) {
@@ -64,15 +88,27 @@ public class ArchivedCardController {
         }
 
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", basicAuth);
-        HttpEntity entity = new HttpEntity(headers);
-        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
-        ArchivedCard[] archivedCardArray = response.getBody();
-        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
-        return archivedCardList;
+        Update here to use FeignClient
+                Update FeignClient to call new paged endpoint that returns paging data
+                Fixup javascript controller to call this new endpoint and to use the return pagingData
+
+        ArchivedCardClient archivedCardClient = Feign.builder()
+                .decoder(new GsonDecoder())
+                .encoder(new GsonEncoder())
+                .requestInterceptor(new BasicAuthRequestInterceptor(archiveCardServiceUserName, archiveCardServicePassword))
+                .target(ArchivedCardClient.class, archiveCardServiceUrl);
+
+
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", basicAuth);
+//        HttpEntity entity = new HttpEntity(headers);
+//        HttpEntity<ArchivedCard[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ArchivedCard[].class);
+//        ArchivedCard[] archivedCardArray = response.getBody();
+//        List<ArchivedCard> archivedCardList = Arrays.asList(archivedCardArray);
+//        return archivedCardList;
     }
+
 
 
     private String getStormpathIdForAccount(Account account) {
