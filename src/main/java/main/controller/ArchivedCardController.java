@@ -78,7 +78,8 @@ public class ArchivedCardController {
                 .target(ArchivedCardClient.class, archiveCardServiceBaseUrl);
 
 
-        return archivedCardClient.cards(userStormpathId);
+        List<Card> cardList = archivedCardClient.cards(userStormpathId);
+        return cardList;
 
     }
 
