@@ -7,7 +7,7 @@ function sleep(delay) {
 
 angular.module('ngTableTutorial', ['ngTable']).controller('tableController', function($scope, $filter, $http, ngTableParams) {
 
-    var getArchivedCardsUri = 'api/new-archived-cards';
+    var getArchivedCardsUri = 'api/archived-cards';
 
     $scope.errorGettingArchivedCardList = false;
     $scope.errorGettingArchivedCardListErrorMessage = "";
